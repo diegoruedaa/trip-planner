@@ -66,6 +66,37 @@ Todo el contenido del viaje vive en [`js/data.js`](js/data.js). No hace falta to
 
 La carpeta [`tickets/`](tickets/) está en `.gitignore` — pon ahí tus PDFs de entradas/reservas reales, y nunca se subirán al repo. Instrucciones completas en [`tickets/README.md`](tickets/README.md).
 
+## Cómo funciona por dentro
+
+### Árbol de carpetas
+
+```
+trip-planner/
+├── index.html      # estructura de la página
+├── css/style.css   # todo el estilo (claro + oscuro)
+├── js/data.js      # tu viaje: CATEGORIES + TRIP
+├── js/app.js       # lógica de render, localStorage, gastos, dark mode
+├── manifest.json + sw.js + icons/   # PWA
+├── tickets/        # PDFs propios (gitignored) + README con instrucciones
+└── README.md
+```
+
+### Orden de carga
+
+`index.html` carga `js/data.js` antes que `js/app.js`. El primero solo declara `CATEGORIES` y `TRIP` (datos puros); el segundo, al final del archivo, llama en cadena a `renderHeader()`, `renderPanels()`, `renderTabs()`, `renderLegend()`, `renderExpenses()`, `initDarkMode()` y `selectDay()`. Todo lo que ves en pantalla se genera a partir de `TRIP` — no hay HTML estático por día.
+
+### Persistencia en localStorage
+
+No hay backend: el progreso vive en `localStorage` del navegador, con claves con prefijo `tp-` (`tp-{dayId}-{idx}` por checkbox, `tp-expenses`, `tp-dark-pref`, `tp-compact`). Es **por navegador y dispositivo** — si cambias de navegador o borras datos de sitio, el progreso desaparece.
+
+### Tickets sin PDF
+
+Si una parada tiene `ticketFile` pero el archivo no existe en `tickets/`, la app no rompe: simplemente el botón "Ver entrada" da un 404 al pincharlo.
+
+### Caché del service worker
+
+Al primer arranque, `sw.js` cachea el app shell (HTML, CSS, JS, manifest, iconos). En visitas siguientes sirve desde caché al instante y refresca en segundo plano contra la red; si no hay red, se queda con la versión cacheada.
+
 ## Accesibilidad
 
 - Checkboxes, interruptores y botones de icono llevan `aria-label`/`aria-checked`.
