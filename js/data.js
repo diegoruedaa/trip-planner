@@ -1,77 +1,77 @@
 /*
- * data.js — edita este archivo con tu propio viaje.
- * No hace falta tocar app.js ni style.css para nada de lo de abajo.
+ * data.js — this is where your trip lives.
+ * You shouldn't need to touch app.js or style.css for any of this.
  */
 
-// Categorías disponibles para el campo `cat` de cada parada.
-// `icon` es el emoji que se muestra en la tarjeta y en la leyenda de ajustes.
-// Puedes añadir, quitar o renombrar categorías; solo asegúrate de que cada
-// `cat` que uses en tus paradas exista aquí.
+// Categories available for each stop's `cat` field.
+// `icon` is the emoji shown on the card and in the settings legend.
+// Add, remove, or rename categories freely — just make sure every `cat`
+// you use on a stop exists here.
 const CATEGORIES = {
-  comida: { icon: '🍽️', label: 'Comida' },
-  cafe: { icon: '☕', label: 'Café / descanso' },
-  monumento: { icon: '🏛️', label: 'Monumento / cultura' },
-  jardin: { icon: '🌳', label: 'Jardín / naturaleza' },
-  transporte: { icon: '🚇', label: 'Transporte' },
-  paseo: { icon: '🚶', label: 'Paseo' },
-  mirador: { icon: '📷', label: 'Mirador / fotos' },
-  barco: { icon: '🚢', label: 'Barco' },
-  hotel: { icon: '🏨', label: 'Alojamiento' },
-  vuelo: { icon: '✈️', label: 'Vuelo' },
-  equipaje: { icon: '🧳', label: 'Equipaje' },
+  comida: { icon: '🍽️', label: 'Food' },
+  cafe: { icon: '☕', label: 'Coffee / break' },
+  monumento: { icon: '🏛️', label: 'Monument / culture' },
+  jardin: { icon: '🌳', label: 'Garden / nature' },
+  transporte: { icon: '🚇', label: 'Transport' },
+  paseo: { icon: '🚶', label: 'Walk' },
+  mirador: { icon: '📷', label: 'Viewpoint / photos' },
+  barco: { icon: '🚢', label: 'Boat' },
+  hotel: { icon: '🏨', label: 'Accommodation' },
+  vuelo: { icon: '✈️', label: 'Flight' },
+  equipaje: { icon: '🧳', label: 'Luggage' },
 };
 
 const TRIP = {
-  // Cabecera de la app.
-  eyebrow: 'Trip planner', // texto pequeño encima del título (ej. "Viaje de pareja", "Ruta en solitario")
-  name: 'Mi viaje ✈️', // título grande; puedes añadir un emoji
-  subtitle: 'Fechas · Planning día a día', // línea bajo el título (ej. "12 – 15 junio · Planning día a día")
+  // App header.
+  eyebrow: 'Trip planner', // small text above the title (e.g. "Couple's trip", "Solo trip")
+  name: 'My trip ✈️', // big title; an emoji works fine here
+  subtitle: 'Dates · Day-by-day plan', // line under the title (e.g. "June 12–15 · Day-by-day plan")
 
-  // Dirección o nombre de tu alojamiento, para reutilizarlo como destino de
-  // Google Maps en varias paradas sin repetir la dirección a mano.
-  // Déjalo vacío ('') si no lo necesitas.
+  // Your accommodation's address or name, so you can reuse it as a Google
+  // Maps destination across stops instead of retyping it each time.
+  // Leave it empty ('') if you don't need it.
   accommodation: '',
 
-  // Un objeto por día del viaje. El orden de este array es el orden de las
-  // pestañas inferiores.
+  // One object per day of the trip. The order of this array is the order
+  // of the bottom tabs.
   days: [
     {
-      id: 1, // identificador único del día (se usa para guardar el progreso en localStorage)
-      color: 'var(--d1)', // color de acento del día (hay --d1, --d2, --d3 y --de definidos en style.css; añade más variables si tienes más de 3-4 días)
-      bg: 'var(--d1-soft)', // versión suave del color, para fondos
-      dateLabel: 'Día 1', // etiqueta corta en la pestaña (ej. "Vie 12")
-      name: 'Ejemplo de día', // nombre del día en la cabecera del panel
-      isoDate: '2026-01-01', // fecha real en formato YYYY-MM-DD (activa el banner "siguiente parada" cuando coincide con hoy)
+      id: 1, // unique day identifier (used as the localStorage key for progress)
+      color: 'var(--d1)', // day's accent color (style.css defines --d1, --d2, --d3, --de — add more variables if you've got more than 3-4 days)
+      bg: 'var(--d1-soft)', // softer version of the color, used for backgrounds
+      dateLabel: 'Day 1', // short tab label (e.g. "Fri 12")
+      name: 'Example day', // day's name in the panel header
+      isoDate: '2026-01-01', // real date, YYYY-MM-DD (triggers the "next stop" banner when it matches today)
       stops: [
-        // Cada parada admite estos campos:
-        //   time       (obligatorio) — hora o rango, texto libre: "09:00" o "09:00–10:30"
-        //   cat        (obligatorio) — debe existir en CATEGORIES
-        //   title      (obligatorio) — nombre de la actividad
-        //   desc       (opcional)    — detalle adicional
-        //   maps       (opcional)    — texto a buscar en Google Maps (nombre de sitio o dirección)
-        //   ticketFile (opcional)    — nombre de archivo dentro de tickets/, ej. 'concert-ticket.pdf'
+        // Each stop takes these fields:
+        //   time       (required) — time or range, free text: "09:00" or "09:00–10:30"
+        //   cat        (required) — must exist in CATEGORIES
+        //   title      (required) — name of the activity
+        //   desc       (optional) — extra detail
+        //   maps       (optional) — text to search on Google Maps (place name or address)
+        //   ticketFile (optional) — filename inside tickets/, e.g. 'concert-ticket.pdf'
         {
           time: '09:00',
           cat: 'vuelo',
-          title: 'Ejemplo: llegada',
-          desc: 'Borra estas paradas de ejemplo y añade las tuyas',
+          title: 'Example: arrival',
+          desc: 'Delete these example stops and add your own',
         },
         {
           time: '10:30–12:00',
           cat: 'monumento',
-          title: 'Ejemplo: visita con entrada',
-          desc: 'El campo "maps" abre Google Maps con este texto',
-          maps: 'Nombre del sitio, Ciudad',
+          title: 'Example: visit with a ticket',
+          desc: 'The "maps" field opens Google Maps with this text',
+          maps: 'Place name, City',
           ticketFile: 'example-ticket.pdf',
         },
         {
           time: '13:00',
           cat: 'comida',
-          title: 'Ejemplo: comida',
-          maps: 'Nombre del restaurante, Ciudad',
+          title: 'Example: meal',
+          maps: 'Restaurant name, City',
         },
       ],
     },
-    // 👉 Copia el bloque de arriba para añadir más días (recuerda usar un `id` distinto en cada uno).
+    // Copy the block above to add more days (remember to give each one a distinct `id`).
   ],
 };

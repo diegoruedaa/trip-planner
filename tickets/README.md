@@ -1,27 +1,27 @@
 # tickets/
 
-Coloca aquí los PDFs de tus entradas o reservas (museos, conciertos, cruceros, lo que sea). Esta carpeta está en `.gitignore` — los PDFs se quedan solo en tu copia local y nunca se suben al repositorio.
+Drop your ticket and booking PDFs here — museum entries, concert tickets, cruise reservations, whatever you're carrying for the trip. This folder is gitignored on purpose: your bookings stay on your machine and never end up in a public repo.
 
-## Cómo enlazarlos
+## Linking them
 
-En [`js/data.js`](../js/data.js), añade el campo `ticketFile` a la parada correspondiente con el nombre exacto del archivo:
+In [`js/data.js`](../js/data.js), add a `ticketFile` field to the relevant stop with the exact filename:
 
 ```js
 {
   time: '10:30–13:30',
   cat: 'monumento',
-  title: 'Visita al museo',
-  maps: 'Nombre del museo, Ciudad',
-  ticketFile: 'museo.pdf', // debe coincidir con tickets/museo.pdf
+  title: 'Museum visit',
+  maps: 'Museum name, City',
+  ticketFile: 'museum.pdf', // must match tickets/museum.pdf
 }
 ```
 
-Ejemplos de nombres (puedes usar los que quieras, solo tienen que coincidir con el archivo real):
+Name them however makes sense to you — the only rule is the filename has to match the real file:
 
 ```
-tickets/museo.pdf
-tickets/concierto.pdf
-tickets/tour-guiado.pdf
+tickets/museum.pdf
+tickets/concert.pdf
+tickets/guided-tour.pdf
 ```
 
-La tarjeta de esa parada mostrará automáticamente un botón "Ver entrada" que abre el PDF.
+That stop's card picks it up automatically and shows a "View ticket" button.

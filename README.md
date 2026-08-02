@@ -1,109 +1,102 @@
 # Trip Planner
 
-Plantilla de planning de viaje día a día: timeline con checklist de progreso, gastos compartidos, modo oscuro automático/manual, enlaces directos a Google Maps y funcionamiento offline como PWA instalable. JS vanilla, sin frameworks ni build step — abre `index.html` y ya está.
+A day-by-day trip planning template: timeline with a progress checklist, shared expenses, automatic/manual dark mode, direct Google Maps links, and offline support as an installable PWA. Vanilla JS, no frameworks, no build step — open `index.html` and you're in.
 
-![Screenshot de Trip Planner](docs/screenshot.png)
+I built this while planning my own trip, then pulled it apart into a reusable template.
 
-> 🔗 Demo en vivo: `<!-- añade aquí tu URL de GitHub Pages / Netlify / Vercel una vez lo despliegues -->`
+![Trip Planner screenshot](docs/screenshot.png)
 
-## Cómo generar el screenshot/GIF de arriba
+> 🔗 Live demo: `<!-- add your GitHub Pages / Netlify / Vercel URL here once you deploy it -->`
 
-1. Abre la app en el navegador (ver [Cómo correrlo en local](#cómo-correrlo-en-local)) con las DevTools en modo responsive (iPhone o similar).
-2. Screenshot: `Cmd+Shift+4` (macOS) sobre la ventana, o el botón de captura de las propias DevTools ("Capture screenshot" en el menú de comandos, `Cmd+Shift+P`).
-3. GIF: graba con QuickTime (`Archivo → Nueva grabación de pantalla`) y conviértelo con [gifski](https://gif.ski/) o `ffmpeg -i grabacion.mov -vf "fps=12,scale=480:-1" salida.gif`.
-4. Guarda el resultado en `docs/screenshot.png` (o `.gif`) y actualiza la ruta de arriba si usas otro nombre.
+## Generating the screenshot/GIF above
+
+1. Open the app in the browser (see [Running it locally](#running-it-locally)) with DevTools in responsive mode (iPhone or similar).
+2. Screenshot: `Cmd+Shift+4` (macOS) over the window, or DevTools' own capture command (`Cmd+Shift+P` → "Capture screenshot").
+3. GIF: record with QuickTime (`File → New Screen Recording`) and convert with [gifski](https://gif.ski/) or `ffmpeg -i recording.mov -vf "fps=12,scale=480:-1" output.gif`.
+4. Drop the result into `docs/screenshot.png` (or `.gif`) and update the path above if you use a different name.
 
 ## Stack
 
-- HTML + CSS + JavaScript vanilla, sin dependencias ni build step.
-- `localStorage` para persistir progreso, gastos y preferencias.
-- Web App Manifest + Service Worker para instalación y uso offline (PWA).
-- Fuentes de Google Fonts (Fraunces + Manrope) cargadas por `<link>`.
+- HTML + CSS + vanilla JavaScript. No dependencies, no build step — I wanted something I could hand-edit and reload straight in the browser, not a toolchain to maintain for a weekend project.
+- `localStorage` for progress, expenses, and preferences. No backend: nobody but the people on the trip needs this data, and a browser is enough for that.
+- Web App Manifest + Service Worker for install and offline use (PWA).
+- Google Fonts (Fraunces + Manrope), loaded via `<link>`.
 
-## Cómo correrlo en local
+## Running it locally
 
-No hace falta ni `npm install`. Basta con servir la carpeta con cualquier servidor estático (necesario para que el service worker funcione; abrir `index.html` directamente con `file://` también funciona para todo excepto el SW):
+Serve the folder with any static server — needed for the service worker to work (opening `index.html` directly via `file://` works fine for everything else):
 
 ```bash
 cd trip-planner
 python3 -m http.server 8000
-# o: npx serve .
+# or: npx serve .
 ```
 
-Abre `http://localhost:8000`.
+Open `http://localhost:8000`.
 
-## Cómo editar `data.js` para tu propio viaje
+## Editing `data.js` for your own trip
 
-Todo el contenido del viaje vive en [`js/data.js`](js/data.js). No hace falta tocar `app.js` ni `style.css`.
+Everything about the trip lives in [`js/data.js`](js/data.js). You shouldn't need to touch `app.js` or `style.css`.
 
-**1. Cabecera** (`TRIP.eyebrow`, `TRIP.name`, `TRIP.subtitle`, `TRIP.accommodation`): textos que se muestran arriba de la app y dirección de tu alojamiento (opcional, para reutilizarla como destino de Maps en varias paradas).
+**1. Header** (`TRIP.eyebrow`, `TRIP.name`, `TRIP.subtitle`, `TRIP.accommodation`): the text shown at the top of the app, plus your accommodation's address (optional — lets you reuse it as a Maps destination across several stops).
 
-**2. Días** (`TRIP.days`): un objeto por día, con:
+**2. Days** (`TRIP.days`): one object per day. Each one needs an `id` (unique, used to save progress), an accent `color`/`bg` pair (use `--d1`, `--d2`, `--d3`, `--de` from `style.css`, or add your own), a `dateLabel` for the tab (e.g. `"Fri 12"`), a `name` for the panel header, an `isoDate` (`YYYY-MM-DD` — triggers the "next stop" banner when it matches today), and a `stops` array.
 
-| Campo | Obligatorio | Descripción |
+**3. Stops** (each element of `stops`):
+
+| Field | Required | Description |
 |---|---|---|
-| `id` | sí | identificador único del día (se usa para guardar el progreso) |
-| `color` / `bg` | sí | color de acento; usa las variables `--d1`, `--d2`, `--d3`, `--de` de `style.css` o añade las tuyas |
-| `dateLabel` | sí | etiqueta corta en la pestaña, ej. `"Vie 12"` |
-| `name` | sí | nombre del día en la cabecera del panel |
-| `isoDate` | sí | fecha real `YYYY-MM-DD`; activa el banner "siguiente parada" cuando coincide con hoy |
-| `stops` | sí | array de paradas del día |
+| `time` | yes | time or range, free text: `"09:00"` or `"09:00–10:30"` |
+| `cat` | yes | must exist in `CATEGORIES` (see below) |
+| `title` | yes | name of the activity |
+| `desc` | no | extra detail |
+| `maps` | no | text to search on Google Maps (place name or address) — auto-generates the "Open in Maps" and "Directions" buttons |
+| `ticketFile` | no | filename inside `tickets/` — generates the "View ticket" button (see [Adding your tickets](#adding-your-tickets)) |
 
-**3. Paradas** (cada elemento de `stops`):
+**4. Categories** (`CATEGORIES`): a `{ key: { icon, label } }` object. Add, remove, or rename categories freely — just make sure every `cat` you use in a stop exists here.
 
-| Campo | Obligatorio | Descripción |
-|---|---|---|
-| `time` | sí | hora o rango, texto libre: `"09:00"` o `"09:00–10:30"` |
-| `cat` | sí | debe existir en `CATEGORIES` (ver abajo) |
-| `title` | sí | nombre de la actividad |
-| `desc` | no | detalle adicional |
-| `maps` | no | texto a buscar en Google Maps (nombre de sitio o dirección) — genera automáticamente los botones "Ver en Maps" y "Cómo llegar" |
-| `ticketFile` | no | nombre de archivo dentro de `tickets/` — genera el botón "Ver entrada" (ver [Cómo añadir tus tickets](#cómo-añadir-tus-tickets)) |
+## Adding your tickets
 
-**4. Categorías** (`CATEGORIES`): objeto `{ clave: { icon, label } }`. Puedes añadir, quitar o renombrar categorías; cada `cat` que uses en una parada debe existir aquí.
+[`tickets/`](tickets/) is gitignored — drop your real PDFs (entries, reservations) in there and they'll never end up in the repo. Full instructions in [`tickets/README.md`](tickets/README.md).
 
-## Cómo añadir tus tickets
+## How it works under the hood
 
-La carpeta [`tickets/`](tickets/) está en `.gitignore` — pon ahí tus PDFs de entradas/reservas reales, y nunca se subirán al repo. Instrucciones completas en [`tickets/README.md`](tickets/README.md).
-
-## Cómo funciona por dentro
-
-### Árbol de carpetas
+### Folder structure
 
 ```
 trip-planner/
-├── index.html      # estructura de la página
-├── css/style.css   # todo el estilo (claro + oscuro)
-├── js/data.js      # tu viaje: CATEGORIES + TRIP
-├── js/app.js       # lógica de render, localStorage, gastos, dark mode
+├── index.html      # page structure
+├── css/style.css   # all styling (light + dark)
+├── js/data.js      # your trip: CATEGORIES + TRIP
+├── js/app.js       # rendering, localStorage, expenses, dark mode
 ├── manifest.json + sw.js + icons/   # PWA
-├── tickets/        # PDFs propios (gitignored) + README con instrucciones
+├── tickets/        # your own PDFs (gitignored) + README with instructions
 └── README.md
 ```
 
-### Orden de carga
+### Load order
 
-`index.html` carga `js/data.js` antes que `js/app.js`. El primero solo declara `CATEGORIES` y `TRIP` (datos puros); el segundo, al final del archivo, llama en cadena a `renderHeader()`, `renderPanels()`, `renderTabs()`, `renderLegend()`, `renderExpenses()`, `initDarkMode()` y `selectDay()`. Todo lo que ves en pantalla se genera a partir de `TRIP` — no hay HTML estático por día.
+`index.html` loads `js/data.js` before `js/app.js`. The first one only declares `CATEGORIES` and `TRIP` — plain data. The second, at the bottom of the file, chains `renderHeader()`, `renderPanels()`, `renderTabs()`, `renderLegend()`, `renderExpenses()`, `applyCompact(storageGet('tp-compact') === '1')`, `initDarkMode()`, and `selectDay()`. Everything on screen is generated from `TRIP` — there's no static per-day HTML.
 
-### Persistencia en localStorage
+### localStorage persistence
 
-No hay backend: el progreso vive en `localStorage` del navegador, con claves con prefijo `tp-` (`tp-{dayId}-{idx}` por checkbox, `tp-expenses`, `tp-dark-pref`, `tp-compact`). Es **por navegador y dispositivo** — si cambias de navegador o borras datos de sitio, el progreso desaparece.
+There's no backend: progress lives in the browser's `localStorage`, under keys prefixed `tp-` (`tp-{dayId}-{idx}` per checkbox, `tp-expenses`, `tp-dark-pref`, `tp-compact`). That means it's tied to one browser on one device — switch browsers or clear site data and the progress is gone. A fine trade-off for a trip you're planning with a handful of people; not worth standing up a backend for.
 
-### Tickets sin PDF
+### Tickets without a PDF
 
-Si una parada tiene `ticketFile` pero el archivo no existe en `tickets/`, la app no rompe: simplemente el botón "Ver entrada" da un 404 al pincharlo.
+If a stop has a `ticketFile` but the file isn't in `tickets/`, the app doesn't break — the "View ticket" button just 404s when clicked.
 
-### Caché del service worker
+### Service worker cache
 
-Al primer arranque, `sw.js` cachea el app shell (HTML, CSS, JS, manifest, iconos). En visitas siguientes sirve desde caché al instante y refresca en segundo plano contra la red; si no hay red, se queda con la versión cacheada.
+On first load, `sw.js` caches the app shell (HTML, CSS, JS, manifest, icons). On later visits it serves from cache instantly and refreshes in the background against the network; offline, it just keeps the cached version.
 
-## Accesibilidad
+## Accessibility
 
-- Checkboxes, interruptores y botones de icono llevan `aria-label`/`aria-checked`.
-- Los checkboxes de cada parada son navegables por teclado (`Tab` + `Enter`/`Espacio`).
-- El modal de ajustes se cierra con `Escape`.
-- Contraste comprobado en modo claro y oscuro (texto secundario ajustado para cumplir WCAG AA).
+- Checkboxes, switches, and icon buttons carry `aria-label`/`aria-checked`.
+- Each stop's checkbox is keyboard-navigable (`Tab` + `Enter`/`Space`).
+- The settings modal closes on `Escape`.
+- Contrast checked in both light and dark mode (secondary text tuned to meet WCAG AA).
 
-## Licencia
+## License
 
-MIT — ver [LICENSE](LICENSE).
+MIT — see [LICENSE](LICENSE).

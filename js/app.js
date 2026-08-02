@@ -1,4 +1,4 @@
-/* app.js — lógica de la app. No necesitas tocar este archivo para personalizar tu viaje: edita js/data.js. */
+/* app.js — the app's logic. You shouldn't need to touch this file to customize your trip — edit js/data.js instead. */
 
 let memStore = {};
 function storageGet(key) { try { const v = localStorage.getItem(key); return v === null ? null : v; } catch (e) { return memStore[key] ?? null; } }
@@ -48,7 +48,7 @@ function renderPanels() {
           <div class="stop-dot"></div>
           <div class="card">
             <div class="card-top">
-              <div class="checkbox" data-toggle role="checkbox" tabindex="0" aria-checked="${done}" aria-label="Marcar como hecho: ${s.title}">
+              <div class="checkbox" data-toggle role="checkbox" tabindex="0" aria-checked="${done}" aria-label="Mark as done: ${s.title}">
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </div>
               <div class="card-body">
@@ -60,16 +60,16 @@ function renderPanels() {
                 ${s.desc ? `<div class="desc">${s.desc}</div>` : ''}
                 ${s.ticketFile ? `<a class="ticket-tag" download="${s.ticketFile}" href="tickets/${s.ticketFile}">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M9 15h6"/><path d="M9 11h2"/></svg>
-                  Ver entrada
+                  View ticket
                 </a>` : ''}
                 ${s.maps ? `<div class="cta-row">
                   <a class="maps-link" target="_blank" rel="noopener" href="${mapsUrl(s.maps)}">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Ver en Maps
+                    Open in Maps
                   </a>
                   <a class="dir-link" target="_blank" rel="noopener" href="${dirUrl(s.maps)}">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>
-                    Cómo llegar
+                    Directions
                   </a>
                 </div>` : ''}
               </div>
@@ -174,7 +174,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') document.getElementById('sheetOverlay').classList.remove('open');
 });
 
-/* --- Vista compacta --- */
+/* --- Compact view --- */
 function applyCompact(on) {
   document.body.classList.toggle('compact-mode', on);
   document.getElementById('compactSwitch').classList.toggle('on', on);
@@ -185,7 +185,7 @@ document.getElementById('compactSwitch').addEventListener('click', () => {
   applyCompact(!document.body.classList.contains('compact-mode'));
 });
 
-/* --- Modo oscuro (manual, con detección automática la primera vez) --- */
+/* --- Dark mode (manual, with automatic detection on first run) --- */
 function computeAutoDark() {
   const h = new Date().getHours();
   return (h >= 21 || h < 7);
@@ -205,7 +205,7 @@ document.getElementById('darkSwitch').addEventListener('click', () => {
   applyDark(on);
 });
 
-/* --- Banner siguiente parada --- */
+/* --- Next-stop banner --- */
 function parseStartMinutes(timeStr) {
   const m = timeStr.match(/(\d{1,2}):(\d{2})/);
   if (!m) return null;
@@ -236,12 +236,12 @@ function updateNextBanner(dayId) {
     banner.classList.add('show');
   } else {
     document.getElementById('nbIcon').textContent = '🌙';
-    document.getElementById('nbTitle').textContent = 'No quedan paradas programadas por hoy';
+    document.getElementById('nbTitle').textContent = 'No more stops planned for today';
     banner.classList.add('show');
   }
 }
 
-/* --- Gastos --- */
+/* --- Expenses --- */
 function loadExpenses() {
   const raw = storageGet('tp-expenses');
   try { return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
@@ -252,7 +252,7 @@ function renderExpenses() {
   const list = loadExpenses();
   const listEl = document.getElementById('expenseList');
   if (list.length === 0) {
-    listEl.innerHTML = '<div class="empty-expenses">Aún no hay ningún gasto apuntado.</div>';
+    listEl.innerHTML = '<div class="empty-expenses">No expenses yet.</div>';
   } else {
     listEl.innerHTML = list.slice().reverse().map((e) => {
       const realIdx = list.indexOf(e);
@@ -262,7 +262,7 @@ function renderExpenses() {
             <div class="ei-desc">${e.desc}</div>
           </div>
           <div class="ei-amount">${e.amount.toFixed(2)}€</div>
-          <button class="ei-del" data-idx="${realIdx}" aria-label="Eliminar gasto: ${e.desc}">✕</button>
+          <button class="ei-del" data-idx="${realIdx}" aria-label="Delete expense: ${e.desc}">✕</button>
         </div>
       `;
     }).join('');
@@ -280,7 +280,7 @@ function renderExpenses() {
   const total = list.reduce((sum, e) => sum + e.amount, 0);
   document.getElementById('expenseSummary').innerHTML = `
     <div class="sc-total">${total.toFixed(2)}€</div>
-    <div class="sc-sub">Gastado en total desde la cartera conjunta</div>
+    <div class="sc-sub">Total spent from the shared wallet</div>
   `;
   document.getElementById('fabTotal').textContent = total.toFixed(0) + '€';
 }

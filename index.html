@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Trip Planner</title>
-<meta name="description" content="Plantilla de planning de viaje: timeline por días, checklist con progreso, gastos compartidos y modo oscuro.">
+<meta name="description" content="Trip planning template: day-by-day timeline, progress checklist, shared expenses, and dark mode.">
 <meta name="theme-color" content="#FAF6EE" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1C1913" media="(prefers-color-scheme: dark)">
 
@@ -25,21 +25,21 @@
     <h1 id="tripTitle"></h1>
     <p class="subtitle" id="tripSubtitle"></p>
   </div>
-  <button class="settings-btn" id="settingsBtn" aria-label="Ajustes">
+  <button class="settings-btn" id="settingsBtn" aria-label="Settings">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg>
   </button>
 </div>
 
-<button class="fab-gastos" id="expensesBtn" aria-label="Abrir gastos compartidos">
+<button class="fab-gastos" id="expensesBtn" aria-label="Open shared expenses">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 012-2h13a1 1 0 011 1v3"/><path d="M3 7v11a2 2 0 002 2h14a1 1 0 001-1V10a1 1 0 00-1-1H8a2 2 0 000 4h12"/></svg>
-  <span class="fab-label">Gastos</span>
+  <span class="fab-label">Expenses</span>
   <span class="fab-total" id="fabTotal">0€</span>
 </button>
 
 <div class="next-banner" id="nextBanner" role="status">
   <div class="nb-icon" id="nbIcon" aria-hidden="true">📍</div>
   <div class="nb-text">
-    <div class="nb-label">Siguiente parada</div>
+    <div class="nb-label">Next stop</div>
     <div class="nb-title" id="nbTitle"></div>
   </div>
 </div>
@@ -47,17 +47,17 @@
 <div id="panels"></div>
 
 <div class="expense-panel" id="panel-expenses">
-  <button class="pill-btn" id="backFromExpenses" style="margin:16px 0 0;">← Volver al planning</button>
+  <button class="pill-btn" id="backFromExpenses" style="margin:16px 0 0;">← Back to plan</button>
   <div class="daymeta" style="padding-left:0;padding-right:0;">
-    <div class="datebig" style="color:var(--de);">Cartera conjunta</div>
-    <h2>Gastos</h2>
+    <div class="datebig" style="color:var(--de);">Shared wallet</div>
+    <h2>Expenses</h2>
   </div>
   <div class="expense-form">
-    <label for="expDesc">Descripción del gasto</label>
-    <input id="expDesc" class="full" placeholder="¿En qué? (ej. Cena del sábado)">
-    <label for="expAmount">Importe en euros</label>
+    <label for="expDesc">Expense description</label>
+    <input id="expDesc" class="full" placeholder="What was it for? (e.g. Saturday dinner)">
+    <label for="expAmount">Amount in euros</label>
     <input id="expAmount" type="number" step="0.01" placeholder="€" class="full">
-    <button class="add-expense-btn" id="expAdd">Añadir gasto</button>
+    <button class="add-expense-btn" id="expAdd">Add expense</button>
   </div>
   <div id="expenseList"></div>
   <div class="summary-card" id="expenseSummary"></div>
@@ -67,24 +67,24 @@
 
 <div class="sheet-overlay" id="sheetOverlay">
   <div class="sheet">
-    <h3>Ajustes</h3>
-    <p class="sheet-sub">Personaliza cómo ves el planning.</p>
+    <h3>Settings</h3>
+    <p class="sheet-sub">Customize how you view the plan.</p>
 
     <div class="switch-row">
-      <span class="switch-label" id="darkLabel">🌙 Modo oscuro</span>
+      <span class="switch-label" id="darkLabel">🌙 Dark mode</span>
       <button class="switch" id="darkSwitch" role="switch" aria-checked="false" aria-labelledby="darkLabel"><span class="knob"></span></button>
     </div>
     <div class="switch-row">
-      <span class="switch-label" id="compactLabel">▤ Vista compacta</span>
+      <span class="switch-label" id="compactLabel">▤ Compact view</span>
       <button class="switch" id="compactSwitch" role="switch" aria-checked="false" aria-labelledby="compactLabel"><span class="knob"></span></button>
     </div>
 
     <div class="sheet-divider"></div>
-    <h3 style="font-size:16px;">Leyenda de iconos</h3>
-    <p class="sheet-sub">Cada actividad usa uno de estos iconos según su tipo.</p>
+    <h3 style="font-size:16px;">Icon legend</h3>
+    <p class="sheet-sub">Each activity uses one of these icons depending on its type.</p>
     <div id="legendList"></div>
 
-    <button class="sheet-close" id="sheetClose">Cerrar</button>
+    <button class="sheet-close" id="sheetClose">Close</button>
   </div>
 </div>
 
