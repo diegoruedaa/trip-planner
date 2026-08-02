@@ -1,0 +1,10 @@
+# Entradas/reservas personales — nunca se suben, cada quien pone las suyas
+tickets/*.pdf
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
